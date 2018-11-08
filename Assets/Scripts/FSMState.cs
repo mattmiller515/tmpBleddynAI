@@ -21,10 +21,6 @@ public abstract class FSMState
     protected Dictionary<Transition, FSMStateID> map = new Dictionary<Transition, FSMStateID>();
     protected FSMStateID stateID;
     public FSMStateID ID { get { return stateID; } }
-    protected Vector3 destPos;
-    protected Transform[] waypoints;
-    protected float curRotSpeed;
-    protected float curSpeed;
 
     public void AddTransition(Transition transition, FSMStateID id)
     {
