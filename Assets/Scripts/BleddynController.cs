@@ -36,7 +36,11 @@ public class BleddynController : AdvancedFSM
 
         PatrolState patrol = new PatrolState(waypoints);
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        ChaseState chase = new ChaseState(waypoints);
+        chase.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
+        chase.AddTransition(Transition.ReachedPlayer, FSMStateID.Attacking);
 
         AddFSMState(patrol);
+        AddFSMState(chase);
     }
 }
