@@ -1,21 +1,21 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
 public class BleddynController : AdvancedFSM 
 {
+    public Transform waypointsParent;
+
     private Transform playerTransform;
 
     //Initialize the Finite state machine for the NPC tank
     protected override void Initialize()
     {
-        //Get the target enemy(Player)
-        GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
-        playerTransform = objPlayer.transform;
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
 
         if (!playerTransform)
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
 
-        //Start Doing the Finite State Machine
         ConstructFSM();
     }
 
@@ -32,9 +32,7 @@ public class BleddynController : AdvancedFSM
 
     private void ConstructFSM()
     {
-        Transform[] waypoints = null;
-
-        PatrolState patrol = new PatrolState(waypoints);
+        PatrolState patrol = new PatrolState(waypointsParent, GetComponent<NavMeshAgent>());
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
 
         AddFSMState(patrol);
