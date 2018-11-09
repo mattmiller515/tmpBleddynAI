@@ -19,5 +19,5 @@ MonoBehaviour:
   searchSpeed: 3
   seekingRadius: 6
   seekingTime: 15
-  seekingSpottingDistance: 5
-  attackRange: 0.75
+  seekingSpottingDistance: 8
+  attackRange: 1.5
