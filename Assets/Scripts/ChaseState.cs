@@ -11,9 +11,8 @@ public class ChaseState : FSMState
 
     public override void Reason(Transform player, Transform npc)
     {
-        //check the distance between player and enemy
-        //when the distance is greather than 5, the enemy lost the player
-        if (Vector3.Distance(npc.position, player.position) >= 5.0f)
+        bool canSeePlayer = npc.GetComponent<FieldOfView>().CanSeePlayer();
+        if (!canSeePlayer)
         {
             Debug.Log("Lost Player");
             npc.GetComponent<BleddynController>().SetTransition(Transition.LostPlayer);

@@ -24,7 +24,8 @@ public class PatrolState : FSMState
 
     public override void Reason(Transform player, Transform npc)
     {
-        if (Vector3.Distance(npc.position, player.position) <= 5.0f)
+        bool canSeePlayer = npc.GetComponent<FieldOfView>().CanSeePlayer();
+        if (canSeePlayer)
         {
             npc.GetComponent<BleddynController>().SetTransition(Transition.SawPlayer);
         }
