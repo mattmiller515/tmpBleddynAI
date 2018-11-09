@@ -20,7 +20,12 @@ public class PatrolState : FSMState
 
     public override void Reason(BleddynController bleddynController)
     {
-        if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.sightDistance)
+        if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.attackRange)
+        {
+            Debug.Log("AttackPlayer");
+            bleddynController.SetTransition(Transition.ReachedPlayer);
+        }
+        else if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.patrolSpottingDistance)
         {
             Debug.Log("SawPlayer");
             bleddynController.SetTransition(Transition.SawPlayer);
