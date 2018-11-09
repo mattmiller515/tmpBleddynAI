@@ -25,7 +25,7 @@ public class PatrolState : FSMState
             Debug.Log("AttackPlayer");
             bleddynController.SetTransition(Transition.ReachedPlayer);
         }
-        else if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.sightDistance)
+        else if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.patrolSpottingDistance)
         {
             Debug.Log("SawPlayer");
             bleddynController.SetTransition(Transition.SawPlayer);

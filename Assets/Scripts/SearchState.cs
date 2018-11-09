@@ -27,7 +27,7 @@ public class SearchState : FSMState
             moveToClosestPoint(bleddynController);
         }
 
-        if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.sightDistance)
+        if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.seekingSpottingDistance)
         {
             Debug.Log("SawPlayer");
             bleddynController.SetTransition(Transition.SawPlayer);
@@ -43,9 +43,9 @@ public class SearchState : FSMState
         if (Vector3.Distance(agent.destination, bleddynController.transform.position) < 1)
         {
             Vector3 randomSearchPosition = new Vector3(
-                lastKnownPlayerPosition.x + UnityEngine.Random.Range(-bleddynController.bleddynConfig.seekingDistance, bleddynController.bleddynConfig.seekingDistance),
+                lastKnownPlayerPosition.x + UnityEngine.Random.Range(-bleddynController.bleddynConfig.seekingRadius, bleddynController.bleddynConfig.seekingRadius),
                 lastKnownPlayerPosition.y,
-                lastKnownPlayerPosition.z + UnityEngine.Random.Range(-bleddynController.bleddynConfig.seekingDistance, bleddynController.bleddynConfig.seekingDistance)
+                lastKnownPlayerPosition.z + UnityEngine.Random.Range(-bleddynController.bleddynConfig.seekingRadius, bleddynController.bleddynConfig.seekingRadius)
             );
             agent.destination = randomSearchPosition;
         }
