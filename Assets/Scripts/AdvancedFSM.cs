@@ -16,6 +16,7 @@ public enum Transition
     SawPlayer,
     ReachedPlayer,
     LostPlayer,
+    GiveUpSearching,
 }
 
 public enum FSMStateID
@@ -24,6 +25,7 @@ public enum FSMStateID
     Patrolling,
     Chasing,
     Attacking,
+    Searching
 }
 
 public class AdvancedFSM : FSM 

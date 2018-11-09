@@ -4,9 +4,16 @@ using UnityEngine.AI;
 
 public class BleddynController : AdvancedFSM 
 {
+    public Bleddyn bleddynConfig;
     public Transform waypointsParent;
+    public Transform[] allWaypoints;
 
-    private Transform playerTransform;
+    [HideInInspector]
+    public Vector3 lastKnownPlayerPosition;
+
+    public Transform playerTransform;
+    public NavMeshAgent agent;
+    public int patrolIndex;
 
     //Initialize the Finite state machine for the NPC tank
     protected override void Initialize()
@@ -16,13 +23,15 @@ public class BleddynController : AdvancedFSM
         if (!playerTransform)
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
 
+        agent = GetComponent<NavMeshAgent>();
+
         ConstructFSM();
     }
 
     protected override void FSMFixedUpdate()
     {
-        CurrentState.Reason(playerTransform, transform);
-        CurrentState.Act(playerTransform, transform);
+        CurrentState.Reason(this);
+        CurrentState.Act(this);
     }
 
     public void SetTransition(Transition t) 
@@ -32,9 +41,17 @@ public class BleddynController : AdvancedFSM
 
     private void ConstructFSM()
     {
-        PatrolState patrol = new PatrolState(waypointsParent, GetComponent<NavMeshAgent>());
+        FSMState patrol = new PatrolState(this);
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
-
         AddFSMState(patrol);
+
+        FSMState chase = new ChaseState();
+        chase.AddTransition(Transition.LostPlayer, FSMStateID.Searching);
+        AddFSMState(chase);
+
+        FSMState search = new SearchState(this);
+        search.AddTransition(Transition.GiveUpSearching, FSMStateID.Patrolling);
+        search.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        AddFSMState(search);
     }
 }

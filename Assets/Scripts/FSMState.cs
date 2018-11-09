@@ -24,15 +24,12 @@ public abstract class FSMState
 
     public void AddTransition(Transition transition, FSMStateID id)
     {
-        // Check if anyone of the args is invallid
         if (transition == Transition.None || id == FSMStateID.None)
         {
             Debug.LogWarning("FSMState : Null transition not allowed");
             return;
         }
-
-        //Since this is a Deterministc FSM,
-        //Check if the current transition was already inside the map
+        
         if (map.ContainsKey(transition))
         {
             Debug.LogWarning("FSMState ERROR: transition is already inside the map");
@@ -49,14 +46,12 @@ public abstract class FSMState
     /// </summary>
     public void DeleteTransition(Transition trans)
     {
-        // Check for NullTransition
         if (trans == Transition.None)
         {
             Debug.LogError("FSMState ERROR: NullTransition is not allowed");
             return;
         }
 
-        // Check if the pair is inside the map before deleting
         if (map.ContainsKey(trans))
         {
             map.Remove(trans);
@@ -93,12 +88,12 @@ public abstract class FSMState
     /// Decides if the state should transition to another on its list
     /// NPC is a reference to the npc that is controlled by this class
     /// </summary>
-    public abstract void Reason(Transform player, Transform npc);
+    public abstract void Reason(BleddynController bleddynController);
 
     /// <summary>
     /// This method controls the behavior of the NPC in the game World.
     /// Every action, movement or communication the NPC does should be placed here
     /// NPC is a reference to the npc tha is controlled by this class
     /// </summary>
-    public abstract void Act(Transform player, Transform npc);
+    public abstract void Act(BleddynController bleddynController);
 }
