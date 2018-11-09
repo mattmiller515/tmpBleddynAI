@@ -4,9 +4,26 @@ using UnityEngine.AI;
 
 public class BleddynController : AdvancedFSM 
 {
+    public Bleddyn bleddynConfig;
     public Transform waypointsParent;
 
-    private Transform playerTransform;
+    [HideInInspector]
+    public Transform[] allWaypoints;
+
+    [HideInInspector]
+    public Vector3 lastKnownPlayerPosition;
+
+    [HideInInspector]
+    public Transform playerTransform;
+
+    [HideInInspector]
+    public NavMeshAgent agent;
+
+    [HideInInspector]
+    public int patrolIndex;
+
+    [HideInInspector]
+    public Animator animator;
 
     //Initialize the Finite state machine for the NPC tank
     protected override void Initialize()
@@ -16,13 +33,18 @@ public class BleddynController : AdvancedFSM
         if (!playerTransform)
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
 
+        lastKnownPlayerPosition = playerTransform.position;
+
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+
         ConstructFSM();
     }
 
-    protected override void FSMFixedUpdate()
+    protected override void FSMLateUpdate()
     {
-        CurrentState.Reason(playerTransform, transform);
-        CurrentState.Act(playerTransform, transform);
+        CurrentState.Reason(this);
+        CurrentState.Act(this);
     }
 
     public void SetTransition(Transition t) 
@@ -32,13 +54,32 @@ public class BleddynController : AdvancedFSM
 
     private void ConstructFSM()
     {
-        PatrolState patrol = new PatrolState(waypointsParent, GetComponent<NavMeshAgent>());
+        FSMState patrol = new PatrolState(this);
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
-        ChaseState chase = new ChaseState();
-        chase.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
-        chase.AddTransition(Transition.ReachedPlayer, FSMStateID.Attacking);
-
+        patrol.AddTransition(Transition.ReachedPlayer, FSMStateID.Attacking);
         AddFSMState(patrol);
+
+        FSMState chase = new ChaseState();
+        chase.AddTransition(Transition.LostPlayer, FSMStateID.Searching);
+        chase.AddTransition(Transition.ReachedPlayer, FSMStateID.Attacking);
         AddFSMState(chase);
+
+        FSMState search = new SearchState(this);
+        search.AddTransition(Transition.GiveUpSearching, FSMStateID.Patrolling);
+        search.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        AddFSMState(search);
+
+        FSMState attack = new AttackState(this);
+        attack.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        attack.AddTransition(Transition.LostPlayer, FSMStateID.Searching);
+        AddFSMState(attack);
+    }
+
+    public bool playerInFOV()
+    {
+        Vector3 targetDir = playerTransform.position - transform.position;
+        float angleToPlayer = Vector3.Angle(targetDir, transform.forward);
+
+        return angleToPlayer >= -bleddynConfig.fieldOfViewAngle && angleToPlayer <= bleddynConfig.fieldOfViewAngle;
     }
 }

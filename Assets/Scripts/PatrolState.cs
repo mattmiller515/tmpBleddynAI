@@ -2,46 +2,44 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using System;
 
 public class PatrolState : FSMState
 {
-    private List<Transform> patrolPoints;
-    private int patrolIndex;
-    private NavMeshAgent agent;
-
-    public PatrolState(Transform waypointsParent, NavMeshAgent agent)
+    public PatrolState(BleddynController bleddynController)
     {
         stateID = FSMStateID.Patrolling;
-        this.agent = agent;
 
-        patrolPoints = new List<Transform>();
-        for (int i = 0; i < waypointsParent.childCount; i++)
+        bleddynController.allWaypoints = new Transform[bleddynController.waypointsParent.childCount];
+        for (int i = 0; i < bleddynController.waypointsParent.childCount; i++)
         {
-            patrolPoints.Add(waypointsParent.GetChild(i).transform);
+            bleddynController.allWaypoints[i] = (bleddynController.waypointsParent.GetChild(i).transform);
         }
-        patrolIndex = 0;
+        bleddynController.patrolIndex = 0;
     }
 
-    public override void Reason(Transform player, Transform npc)
+    public override void Reason(BleddynController bleddynController)
     {
-        bool canSeePlayer = npc.GetComponent<FieldOfView>().CanSeePlayer();
+        bool canSeePlayer = bleddynController.GetComponent<FieldOfView>().CanSeePlayer();
         if (canSeePlayer)
-        {
-            npc.GetComponent<BleddynController>().SetTransition(Transition.SawPlayer);
+        { 
+            Debug.Log("SawPlayer");
+            bleddynController.SetTransition(Transition.SawPlayer);          
         }
     }
 
-    public override void Act(Transform player, Transform npc)
+    public override void Act(BleddynController bleddynController)
     {
-        Vector3 curNavPoint = patrolPoints[patrolIndex].position;
-        agent.destination = curNavPoint;
+        Vector3 curNavPoint = bleddynController.allWaypoints[bleddynController.patrolIndex].position;
+        bleddynController.agent.destination = curNavPoint;
+        bleddynController.agent.speed = bleddynController.bleddynConfig.patrolSpeed;
 
-        Vector3 alignedAgentPosition = new Vector3(agent.transform.position.x, curNavPoint.y, agent.transform.position.z);
+        Vector3 alignedAgentPosition = new Vector3(bleddynController.agent.transform.position.x, curNavPoint.y, bleddynController.agent.transform.position.z);
         if (Vector3.Distance(curNavPoint, alignedAgentPosition) <= 1)
         {
-            if (++patrolIndex >= patrolPoints.Count)
+            if (++bleddynController.patrolIndex >= bleddynController.allWaypoints.Length)
             {
-                patrolIndex = 0;
+                bleddynController.patrolIndex = 0;
             }
         }
     }

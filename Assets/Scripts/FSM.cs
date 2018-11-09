@@ -5,7 +5,7 @@ public class FSM : MonoBehaviour
 {
     protected virtual void Initialize() { }
     protected virtual void FSMUpdate() { }
-    protected virtual void FSMFixedUpdate() { }
+    protected virtual void FSMLateUpdate() { }
 
 	// Use this for initialization
 	void Start () 
@@ -19,8 +19,8 @@ public class FSM : MonoBehaviour
         FSMUpdate();
 	}
 
-    void FixedUpdate()
+    private void LateUpdate()
     {
-        FSMFixedUpdate();
-    }    
+        FSMLateUpdate();
+    }
 }

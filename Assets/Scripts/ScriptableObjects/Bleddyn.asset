@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe52ec2f704b1a4d963c7259e9b5269, type: 3}
+  m_Name: Bleddyn
+  m_EditorClassIdentifier: 
+  fieldOfViewAngle: 75
+  patrolSpeed: 4
+  patrolSpottingDistance: 5
+  chaseSpeed: 6
+  chaseSpottingDistance: 10
+  searchSpeed: 3
+  seekingRadius: 6
+  seekingTime: 15
+  seekingSpottingDistance: 5
+  attackRange: 0.75
