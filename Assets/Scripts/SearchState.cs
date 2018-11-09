@@ -27,10 +27,13 @@ public class SearchState : FSMState
             moveToClosestPoint(bleddynController);
         }
 
-        if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.seekingSpottingDistance)
+        if (bleddynController.playerInFOV())
         {
-            Debug.Log("SawPlayer");
-            bleddynController.SetTransition(Transition.SawPlayer);
+            if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.seekingSpottingDistance)
+            {
+                Debug.Log("SawPlayer");
+                bleddynController.SetTransition(Transition.SawPlayer);
+            }
         }
     }
 

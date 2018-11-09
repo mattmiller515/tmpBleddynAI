@@ -11,17 +11,27 @@ public class ChaseState : FSMState
 
     public override void Reason(BleddynController bleddynController)
     {
-        float distanceToPlayer = Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position);
-
-        if (distanceToPlayer < bleddynController.bleddynConfig.attackRange)
+        if (bleddynController.playerInFOV())
         {
-            Debug.Log("AttackPlayer");
-            bleddynController.SetTransition(Transition.ReachedPlayer);
+            float distanceToPlayer = Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position);
+
+            if (distanceToPlayer < bleddynController.bleddynConfig.attackRange)
+            {
+                Debug.Log("AttackPlayer");
+                bleddynController.SetTransition(Transition.ReachedPlayer);
+            }
+
+            if (distanceToPlayer > bleddynController.bleddynConfig.chaseSpottingDistance)
+            {
+                Debug.Log("LostPlayer");
+                bleddynController.lastKnownPlayerPosition = bleddynController.playerTransform.position;
+                bleddynController.SetTransition(Transition.LostPlayer);
+            }
         }
-
-        if (distanceToPlayer > bleddynController.bleddynConfig.chaseSpottingDistance)
+        else
         {
-            Debug.Log("LostPlayer");
+            Debug.Log("PlayerOutOfSight");
+            bleddynController.lastKnownPlayerPosition = bleddynController.playerTransform.position;
             bleddynController.SetTransition(Transition.LostPlayer);
         }
     }
