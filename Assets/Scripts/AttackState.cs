@@ -11,7 +11,7 @@ public class AttackState : FSMState
     public AttackState(BleddynController bleddynController)
     {
         stateID = FSMStateID.Attacking;
-        animator = bleddynController.GetComponent<Animator>();
+        animator = bleddynController.animator;
         agent = bleddynController.agent;
     }
 
@@ -20,6 +20,7 @@ public class AttackState : FSMState
     {
         if (Vector3.Distance(bleddynController.playerTransform.position, bleddynController.transform.position) > bleddynController.bleddynConfig.attackRange)
         {
+            Debug.Log(Vector3.Distance(bleddynController.playerTransform.position, bleddynController.transform.position));
             bleddynController.SetTransition(Transition.SawPlayer);
             animator.SetBool("isAttacking", false);
         }
@@ -27,10 +28,7 @@ public class AttackState : FSMState
 
     public override void Act(BleddynController bleddynController)
     {
-        Debug.Log("--------------------ATTACK-------------------");
         agent.velocity = Vector3.zero;
-        bleddynController.transform.LookAt(bleddynController.playerTransform);
-        Debug.Log(animator.GetBool("isAttacking"));
         animator.SetBool("isAttacking", true);
     }
 }

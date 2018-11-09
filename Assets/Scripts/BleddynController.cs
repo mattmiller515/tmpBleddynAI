@@ -13,6 +13,7 @@ public class BleddynController : AdvancedFSM
 
     public Transform playerTransform;
     public NavMeshAgent agent;
+    public Animator animator;
     public int patrolIndex;
 
     //Initialize the Finite state machine for the NPC tank
@@ -24,6 +25,7 @@ public class BleddynController : AdvancedFSM
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
 
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
         ConstructFSM();
     }
@@ -60,5 +62,14 @@ public class BleddynController : AdvancedFSM
         FSMState attack = new AttackState(this);
         attack.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         AddFSMState(attack);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("__________collision__________");
+        if(collision.gameObject.tag == "Player")
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }
