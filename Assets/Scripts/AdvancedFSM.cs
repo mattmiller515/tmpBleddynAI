@@ -59,6 +59,7 @@ public class AdvancedFSM : FSM
         {
             fsmStates.Add(fsmState);
             currentState = fsmState;
+            print("Added State: " + fsmState);
             currentStateID = fsmState.ID;
             return;
         }
@@ -74,6 +75,7 @@ public class AdvancedFSM : FSM
         }
 
         //If no state in the current then add the state to the list
+        print("Added State: " + fsmState);
         fsmStates.Add(fsmState);
     }
 
@@ -95,6 +97,7 @@ public class AdvancedFSM : FSM
         {
             if (state.ID == fsmState)
             {
+                print("DELETED: " + fsmState);
                 fsmStates.Remove(state);
                 return;
             }
@@ -126,10 +129,9 @@ public class AdvancedFSM : FSM
         }
 
         // Update the currentStateID and currentState		
-        currentStateID = id;
         foreach (FSMState state in fsmStates)
         {
-            if (state.ID == currentStateID)
+            if (state.ID == currentStateID) //TODO - this should by "id"
             {
                 currentState = state;
                 break;
