@@ -11,12 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fe52ec2f704b1a4d963c7259e9b5269, type: 3}
   m_Name: Bleddyn
   m_EditorClassIdentifier: 
+  fieldOfViewAngle: 75
   patrolSpeed: 4
   patrolSpottingDistance: 5
-  chaseSpeed: 8
+  chaseSpeed: 6
   chaseSpottingDistance: 10
-  searchSpeed: 2
-  seekingRadius: 10
-  seekingTime: 10
+  searchSpeed: 3
+  seekingRadius: 6
+  seekingTime: 15
   seekingSpottingDistance: 5
-  attackRange: 2
+  attackRange: 0.75

@@ -16,26 +16,34 @@ public class AttackState : FSMState
 
     public override void Reason(BleddynController bleddynController)
     {
-        float distanceToPlayer = Vector3.Distance(bleddynController.playerTransform.position, bleddynController.transform.position);
-
-        if (distanceToPlayer > bleddynController.bleddynConfig.attackRange)
+        if (bleddynController.playerInFOV())
         {
-            if (!bleddynController.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !bleddynController.animator.IsInTransition(0))
+            float distanceToPlayer = Vector3.Distance(bleddynController.playerTransform.position, bleddynController.transform.position);
+
+            if (distanceToPlayer > bleddynController.bleddynConfig.attackRange)
             {
-                Debug.Log("SawPlayer");
-                bleddynController.SetTransition(Transition.SawPlayer);
-                bleddynController.animator.SetBool("isAttacking", false);
+                if (!bleddynController.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !bleddynController.animator.IsInTransition(0))
+                {
+                    Debug.Log("SawPlayer");
+                    bleddynController.SetTransition(Transition.SawPlayer);
+                    bleddynController.animator.SetBool("isAttacking", false);
+                }
+            }
+
+            if (distanceToPlayer > bleddynController.bleddynConfig.chaseSpottingDistance)
+            {
+                if (!bleddynController.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !bleddynController.animator.IsInTransition(0))
+                {
+                    Debug.Log("LostPlayer");
+                    bleddynController.SetTransition(Transition.LostPlayer);
+                    bleddynController.animator.SetBool("isAttacking", false);
+                }
             }
         }
-
-        if (distanceToPlayer > bleddynController.bleddynConfig.chaseSpottingDistance)
+        else
         {
-            if (!bleddynController.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !bleddynController.animator.IsInTransition(0))
-            {
-                Debug.Log("LostPlayer");
-                bleddynController.SetTransition(Transition.LostPlayer);
-                bleddynController.animator.SetBool("isAttacking", false);
-            }
+            Debug.Log("PlayerOutOfSight");
+            bleddynController.SetTransition(Transition.LostPlayer);
         }
     }
 

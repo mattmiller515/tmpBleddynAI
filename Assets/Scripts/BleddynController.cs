@@ -5,8 +5,6 @@ using UnityEngine.AI;
 public class BleddynController : AdvancedFSM 
 {
     public Bleddyn bleddynConfig;
-
-    [HideInInspector]
     public Transform waypointsParent;
 
     [HideInInspector]
@@ -34,6 +32,8 @@ public class BleddynController : AdvancedFSM
 
         if (!playerTransform)
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
+
+        lastKnownPlayerPosition = playerTransform.position;
 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -73,5 +73,13 @@ public class BleddynController : AdvancedFSM
         attack.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         attack.AddTransition(Transition.LostPlayer, FSMStateID.Searching);
         AddFSMState(attack);
+    }
+
+    public bool playerInFOV()
+    {
+        Vector3 targetDir = playerTransform.position - transform.position;
+        float angleToPlayer = Vector3.Angle(targetDir, transform.forward);
+
+        return angleToPlayer >= -bleddynConfig.fieldOfViewAngle && angleToPlayer <= bleddynConfig.fieldOfViewAngle;
     }
 }

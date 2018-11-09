@@ -124,15 +124,14 @@ public class AdvancedFSM : FSM
 
         // Check if the currentState has the transition passed as argument
         FSMStateID id = currentState.GetOutputState(trans);
-        print("---------------" + id);
         if (id == FSMStateID.None)
         {
             Debug.LogError("FSM ERROR: Current State does not have a target state for this transition");
             return;
         }
 
-        currentStateID = id;
         // Update the currentStateID and currentState		
+        currentStateID = id;
         foreach (FSMState state in fsmStates)
         {
             if (state.ID == currentStateID) //TODO - this should by "id"
