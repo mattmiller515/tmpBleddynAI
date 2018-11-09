@@ -33,19 +33,12 @@ public class BleddynController : AdvancedFSM
     private void ConstructFSM()
     {
         PatrolState patrol = new PatrolState(waypointsParent, GetComponent<NavMeshAgent>());
-        patrol.AddTransition(Transition.ReachedPlayer, FSMStateID.Attacking);
+        patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        ChaseState chase = new ChaseState();
+        chase.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
+        chase.AddTransition(Transition.ReachedPlayer, FSMStateID.Attacking);
+
         AddFSMState(patrol);
-
-        AttackState attackState = new AttackState(transform);
-        attackState.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
-        AddFSMState(attackState);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            Destroy(collision.gameObject);
-        }
+        AddFSMState(chase);
     }
 }
