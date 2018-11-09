@@ -9,22 +9,24 @@ public class ChaseState : FSMState
         stateID = FSMStateID.Chasing;
     }
 
-    public override void Reason(Transform player, Transform npc)
+    public override void Reason(BleddynController bleddynController)
     {
-        //check the distance between player and enemy
-        //when the distance is greather than 5, the enemy lost the player
-        if (Vector3.Distance(npc.position, player.position) >= 5.0f)
+        bleddynController.agent.speed = bleddynController.bleddynConfig.chaseSpeed;
+
+        if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) <= bleddynController.bleddynConfig.attackRange)
         {
-            Debug.Log("Lost Player");
-            npc.GetComponent<BleddynController>().SetTransition(Transition.LostPlayer);
+            Debug.Log("AttackPlayer");
+            bleddynController.SetTransition(Transition.ReachedPlayer);
+        }
+        else if (Vector3.Distance(bleddynController.transform.position, bleddynController.playerTransform.position) >= 10.0f)
+        {
+            Debug.Log("LostPlayer");
+            bleddynController.SetTransition(Transition.LostPlayer);
         }
     }
 
-    public override void Act(Transform player, Transform npc)
+    public override void Act(BleddynController bleddynController)
     {
-        NavMeshAgent agent = npc.GetComponent<NavMeshAgent>();
-        agent.destination = player.position;
-        var distance = Vector3.Distance(npc.position, player.position);
-        Debug.Log("chasing, Distance: " + distance);
+        bleddynController.agent.destination = bleddynController.playerTransform.position;
     }
 }

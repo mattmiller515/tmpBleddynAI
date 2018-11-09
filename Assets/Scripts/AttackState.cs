@@ -8,27 +8,28 @@ public class AttackState : FSMState
     Animator animator;
     NavMeshAgent agent;
 
-    public AttackState(Transform npc)
+    public AttackState(BleddynController bleddynController)
     {
         stateID = FSMStateID.Attacking;
-        animator = npc.GetComponent<Animator>();
-        agent = npc.GetComponent<NavMeshAgent>();
+        animator = bleddynController.GetComponent<Animator>();
+        agent = bleddynController.agent;
     }
 
 
-    public override void Reason(Transform player, Transform npc)
+    public override void Reason(BleddynController bleddynController)
     {
-        if (Vector3.Distance(player.position, npc.position) > 5)
+        if (Vector3.Distance(bleddynController.playerTransform.position, bleddynController.transform.position) > bleddynController.bleddynConfig.attackRange)
         {
-            npc.GetComponent<BleddynController>().SetTransition(Transition.SawPlayer);
+            bleddynController.SetTransition(Transition.SawPlayer);
             animator.SetBool("isAttacking", false);
         }
     }
 
-    public override void Act(Transform player, Transform npc)
+    public override void Act(BleddynController bleddynController)
     {
+        Debug.Log("--------------------ATTACK-------------------");
         agent.velocity = Vector3.zero;
-        npc.LookAt(player);
+        bleddynController.transform.LookAt(bleddynController.playerTransform);
         Debug.Log(animator.GetBool("isAttacking"));
         animator.SetBool("isAttacking", true);
     }

@@ -16,6 +16,7 @@ public enum Transition
     SawPlayer,
     ReachedPlayer,
     LostPlayer,
+    GiveUpSearching,
 }
 
 public enum FSMStateID
@@ -24,6 +25,7 @@ public enum FSMStateID
     Patrolling,
     Chasing,
     Attacking,
+    Searching
 }
 
 public class AdvancedFSM : FSM 
@@ -122,12 +124,14 @@ public class AdvancedFSM : FSM
 
         // Check if the currentState has the transition passed as argument
         FSMStateID id = currentState.GetOutputState(trans);
+        print("---------------" + id);
         if (id == FSMStateID.None)
         {
             Debug.LogError("FSM ERROR: Current State does not have a target state for this transition");
             return;
         }
 
+        currentStateID = id;
         // Update the currentStateID and currentState		
         foreach (FSMState state in fsmStates)
         {
