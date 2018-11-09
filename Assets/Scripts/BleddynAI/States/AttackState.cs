@@ -44,13 +44,13 @@ public class AttackState : FSMState
         {
             Debug.Log("PlayerOutOfSight");
             bleddynController.SetTransition(Transition.LostPlayer);
+            bleddynController.animator.SetBool("isAttacking", false);
         }
     }
 
     public override void Act(BleddynController bleddynController)
     {
         agent.velocity = Vector3.zero;
-        bleddynController.transform.LookAt(bleddynController.playerTransform);
         bleddynController.animator.SetBool("isAttacking", true);
     }
 }
